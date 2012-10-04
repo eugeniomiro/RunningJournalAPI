@@ -38,5 +38,25 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
                 Assert.NotNull(json);
             }
         }
+
+        [Fact]
+        public void PostEntrySucceeds()
+        {
+            using (var client = HttpClientFactory.Create())
+            {
+                var json = new
+                {
+                    time = DateTimeOffset.Now,
+                    distance = 8500,
+                    duration = TimeSpan.FromMinutes(44)
+                };
+
+                var response = client.PostAsJsonAsync("", json).Result;
+
+                Assert.True(
+                    response.IsSuccessStatusCode,
+                    "Actual status code: " + response.StatusCode);
+            }
+        }
     }
 }
