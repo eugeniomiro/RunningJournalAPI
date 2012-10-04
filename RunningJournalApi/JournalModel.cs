@@ -9,5 +9,6 @@ namespace Ploeh.Samples.RunningJournalApi
     [XmlRoot("journal", Namespace = "http://samples.ploeh.dk/journal/2012")]
     public class JournalModel
     {
+        public JournalEntryModel[] Entries { get; set; }
     }
 }
