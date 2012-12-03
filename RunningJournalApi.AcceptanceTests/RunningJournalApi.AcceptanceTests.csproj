@@ -69,8 +69,10 @@
     <Compile Include="HttpClientFactory.cs" />
     <Compile Include="ContentReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UseDatabaseAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -60,6 +60,7 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
         }
 
         [Fact]
+        [UseDatabase]
         public void AfterPostingEntryGetRootReturnsEntryInContent()
         {
             using (var client = HttpClientFactory.Create())
