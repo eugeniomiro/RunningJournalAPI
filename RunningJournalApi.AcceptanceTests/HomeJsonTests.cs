@@ -6,12 +6,16 @@ using Xunit;
 using System.Web.Http.SelfHost;
 using System.Net.Http;
 using Ploeh.Samples.RunningJournalApi;
+using System.Configuration;
+using Simple.Data;
+using System.Dynamic;
 
 namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
 {
     public class HomeJsonTests
     {
         [Fact]
+        [UseDatabase]
         public void GetReturnsResponseWithCorrectStatusCode()
         {
             using (var client = HttpClientFactory.Create())
@@ -25,6 +29,7 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
         }
 
         [Fact]
+        [UseDatabase]
         public void GetReturnsJsonContent()
         {
             using (var client = HttpClientFactory.Create())
@@ -40,6 +45,7 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
         }
 
         [Fact]
+        [UseDatabase]
         public void PostEntrySucceeds()
         {
             using (var client = HttpClientFactory.Create())
@@ -74,6 +80,34 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
                 var expected = json.ToJObject();
                 client.PostAsJsonAsync("", json).Wait();
 
+                var response = client.GetAsync("").Result;
+
+                var actual = response.Content.ReadAsJsonAsync().Result;
+                Assert.Contains(expected, actual.entries);
+            }
+        }
+
+        [Fact]
+        [UseDatabase]
+        public void GetRootReturnsCorrectEntryFromDatabase()
+        {
+            dynamic entry = new ExpandoObject();
+            entry.time = DateTimeOffset.Now;
+            entry.distance = 6000;
+            entry.duration = TimeSpan.FromMinutes(31);
+
+            var expected = ((object)entry).ToJObject();
+
+            var connStr =
+                ConfigurationManager.ConnectionStrings["running-journal"].ConnectionString;
+            var db = Database.OpenConnection(connStr);
+            db.User.Insert(UserName: "foo");
+            var userId = db.User.FindAllByUserName("foo").Single().UserId;
+            entry.UserId = userId;
+            db.JournalEntry.Insert(entry);
+
+            using (var client = HttpClientFactory.Create())
+            {
                 var response = client.GetAsync("").Result;
 
                 var actual = response.Content.ReadAsJsonAsync().Result;

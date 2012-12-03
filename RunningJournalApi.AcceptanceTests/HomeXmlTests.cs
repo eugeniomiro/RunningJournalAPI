@@ -12,6 +12,7 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
         private readonly static XNamespace j = "http://samples.ploeh.dk/journal/2012";
 
         [Fact]
+        [UseDatabase]
         public void GetReturnsResponseWithCorrectStatusCode()
         {
             using (var client = HttpClientFactory.Create())
@@ -27,6 +28,7 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
         }
 
         [Fact]
+        [UseDatabase]
         public void GetReturnsJsonContent()
         {
             using (var client = HttpClientFactory.Create())
