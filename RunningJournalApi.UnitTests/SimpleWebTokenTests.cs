@@ -56,11 +56,12 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             // Teardown
         }
 
-        [Fact]
-        public void TryParseInvalidStringReturnsFalse()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("foo")]
+        public void TryParseInvalidStringReturnsFalse(string invalidString)
         {
             // Fixture setup
-            var invalidString = "foo";
             // Exercise system
             SimpleWebToken dummy;
             bool actual = SimpleWebToken.TryParse(invalidString, out dummy);
