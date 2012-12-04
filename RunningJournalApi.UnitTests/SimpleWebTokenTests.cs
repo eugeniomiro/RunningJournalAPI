@@ -60,6 +60,7 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
         [InlineData(null)]
         [InlineData("   ")]
         [InlineData("foo")]
+        [InlineData("bar")]
         public void TryParseInvalidStringReturnsFalse(string invalidString)
         {
             // Fixture setup
