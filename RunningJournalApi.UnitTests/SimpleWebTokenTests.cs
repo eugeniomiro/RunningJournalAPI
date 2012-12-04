@@ -33,5 +33,17 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
                 expected.Cast<object>().SequenceEqual(
                     ((System.Collections.IEnumerable)sut).OfType<object>()));
         }
+
+        [Fact]
+        public void ToStringReturnsCorrectResult()
+        {
+            // Fixture setup
+            var sut = new SimpleWebToken(new Claim("foo", "bar"));
+            // Exercise system
+            var actual = sut.ToString();
+            // Verify outcome
+            Assert.Equal("foo=bar", actual);
+            // Teardown
+        }
     }
 }
