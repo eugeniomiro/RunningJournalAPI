@@ -72,11 +72,19 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             // Teardown
         }
 
-        [Fact]
-        public void TryParseValidStringReturnsCorrectResult()
+        [Theory]
+        [InlineData(new object[] { new string[0] })]
+        [InlineData(new object[] { new[] { "foo|bar" } })]
+        [InlineData(new object[] { new[] { "foo|bar", "baz|qux" } })]
+        [InlineData(new object[] { new[] { "foo|bar", "baz|qux", "quux|corge" } })]
+        public void TryParseValidStringReturnsCorrectResult(
+            string[] keysAndValues)
         {
             // Fixture setup
-            var expected = new[] { new Claim("foo", "bar") };
+            var expected = keysAndValues
+                .Select(s => s.Split('|'))
+                .Select(a => new Claim(a[0], a[1]))
+                .ToArray();
             var tokenString = new SimpleWebToken(expected).ToString();
             // Exercise system
             SimpleWebToken actual;

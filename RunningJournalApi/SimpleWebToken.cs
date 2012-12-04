@@ -25,12 +25,25 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public static bool TryParse(string tokenString, out SimpleWebToken token)
         {
-            if (tokenString != "foo=bar")
-            {
-                token = null;
+            token = null;
+            if (tokenString == null)
                 return false;
+
+            if (tokenString == string.Empty)
+            {
+                token = new SimpleWebToken();
+                return true;
             }
-            token = new SimpleWebToken(new Claim("foo", "bar"));
+
+            var claimPairs = tokenString.Split("&".ToArray());
+            if (!claimPairs.All(x => x.Contains("=")))
+                return false;
+
+            var claims = claimPairs
+                .Select(s => s.Split("=".ToArray()))
+                .Select(a => new Claim(a[0], a[1]));
+
+            token = new SimpleWebToken(claims.ToArray());
             return true;
         }
 
