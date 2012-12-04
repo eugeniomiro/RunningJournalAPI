@@ -12,14 +12,17 @@ namespace Ploeh.Samples.RunningJournalApi
 {
     public class JournalController : ApiController
     {
+        private readonly dynamic db;
+
+        public JournalController()
+        {
+            this.db = CreateDb();
+        }
+
         public HttpResponseMessage Get()
         {
-            var connStr =
-                ConfigurationManager.ConnectionStrings["running-journal"].ConnectionString;
-            var db = Database.OpenConnection(connStr);
-
-            var entries = db.JournalEntry
-                .FindAll(db.JournalEntry.User.UserName == "foo")
+            var entries = this.db.JournalEntry
+                .FindAll(this.db.JournalEntry.User.UserName == "foo")
                 .ToArray<JournalEntryModel>();
 
             return this.Request.CreateResponse(
@@ -32,19 +35,22 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public HttpResponseMessage Post(JournalEntryModel journalEntry)
         {
-            var connStr =
-                ConfigurationManager.ConnectionStrings["running-journal"].ConnectionString;
-            var db = Database.OpenConnection(connStr);
+            var userId = this.db.User.Insert(UserName: "foo").UserId;
 
-            var userId = db.User.Insert(UserName: "foo").UserId;
-
-            db.JournalEntry.Insert(
+            this.db.JournalEntry.Insert(
                 UserId: userId,
                 Time: journalEntry.Time,
                 Distance: journalEntry.Distance,
                 Duration: journalEntry.Duration);
 
             return this.Request.CreateResponse();
+        }
+
+        private static dynamic CreateDb()
+        {
+            var connStr =
+                ConfigurationManager.ConnectionStrings["running-journal"].ConnectionString;
+            return Database.OpenConnection(connStr);
         }
     }
 }
