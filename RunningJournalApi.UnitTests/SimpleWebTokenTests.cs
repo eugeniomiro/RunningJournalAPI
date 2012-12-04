@@ -68,5 +68,20 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             Assert.False(actual);
             // Teardown
         }
+
+        [Fact]
+        public void TryParseValidStringReturnsCorrectResult()
+        {
+            // Fixture setup
+            var expected = new[] { new Claim("foo", "bar") };
+            var tokenString = new SimpleWebToken(expected).ToString();
+            // Exercise system
+            SimpleWebToken actual;
+            var isValid = SimpleWebToken.TryParse(tokenString, out actual);
+            // Verify outcome
+            Assert.True(isValid, "Token string was not considered valid.");
+            Assert.True(expected.SequenceEqual(actual, new ClaimComparer()));
+            // Teardown
+        }
     }
 }

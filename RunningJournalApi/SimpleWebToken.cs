@@ -25,8 +25,13 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public static bool TryParse(string tokenString, out SimpleWebToken token)
         {
-            token = null;
-            return false;
+            if (tokenString == "foo")
+            {
+                token = null;
+                return false;
+            }
+            token = new SimpleWebToken(new Claim("foo", "bar"));
+            return true;
         }
 
         public IEnumerator<Claim> GetEnumerator()
