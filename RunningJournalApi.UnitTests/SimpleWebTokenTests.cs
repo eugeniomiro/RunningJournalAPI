@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Ploeh.Samples.RunningJournalApi;
 using System.Security.Claims;
+using Xunit.Extensions;
 
 namespace Ploeh.Samples.RunningJournalApi.UnitTests
 {
@@ -34,15 +35,23 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
                     ((System.Collections.IEnumerable)sut).OfType<object>()));
         }
 
-        [Fact]
-        public void ToStringReturnsCorrectResult()
+        [Theory]
+        [InlineData(new string[0], "")]
+        [InlineData(new[] { "foo|bar" }, "foo=bar")]
+        public void ToStringReturnsCorrectResult(
+            string[] keysAndValues,
+            string expected)
         {
             // Fixture setup
-            var sut = new SimpleWebToken(new Claim("foo", "bar"));
+            var claims = keysAndValues
+                .Select(s => s.Split('|'))
+                .Select(a => new Claim(a[0], a[1]))
+                .ToArray();
+            var sut = new SimpleWebToken(claims);
             // Exercise system
             var actual = sut.ToString();
             // Verify outcome
-            Assert.Equal("foo=bar", actual);
+            Assert.Equal(expected, actual);
             // Teardown
         }
     }
