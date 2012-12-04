@@ -58,6 +58,7 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
 
         [Theory]
         [InlineData(null)]
+        [InlineData("   ")]
         [InlineData("foo")]
         public void TryParseInvalidStringReturnsFalse(string invalidString)
         {

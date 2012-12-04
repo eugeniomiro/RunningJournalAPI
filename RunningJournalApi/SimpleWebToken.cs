@@ -25,7 +25,7 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public static bool TryParse(string tokenString, out SimpleWebToken token)
         {
-            if (tokenString == null || tokenString == "foo")
+            if (string.IsNullOrWhiteSpace(tokenString) || tokenString == "foo")
             {
                 token = null;
                 return false;
