@@ -17,7 +17,10 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public override string ToString()
         {
-            return this.claims.Any() ? "foo=bar" : "";
+            return this.claims
+                .Select(c => c.Type + "=" + c.Value)
+                .DefaultIfEmpty(string.Empty)
+                .Aggregate((x, y) => x + "&" + y);
         }
 
         public IEnumerator<Claim> GetEnumerator()

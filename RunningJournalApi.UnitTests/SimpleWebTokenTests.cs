@@ -38,6 +38,7 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
         [Theory]
         [InlineData(new string[0], "")]
         [InlineData(new[] { "foo|bar" }, "foo=bar")]
+        [InlineData(new[] { "foo|bar", "baz|qux" }, "foo=bar&baz=qux")]
         public void ToStringReturnsCorrectResult(
             string[] keysAndValues,
             string expected)
