@@ -55,5 +55,18 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             Assert.Equal(expected, actual);
             // Teardown
         }
+
+        [Fact]
+        public void TryParseInvalidStringReturnsFalse()
+        {
+            // Fixture setup
+            var invalidString = "foo";
+            // Exercise system
+            SimpleWebToken dummy;
+            bool actual = SimpleWebToken.TryParse(invalidString, out dummy);
+            // Verify outcome
+            Assert.False(actual);
+            // Teardown
+        }
     }
 }

@@ -23,6 +23,12 @@ namespace Ploeh.Samples.RunningJournalApi
                 .Aggregate((x, y) => x + "&" + y);
         }
 
+        public static bool TryParse(string tokenString, out SimpleWebToken token)
+        {
+            token = null;
+            return false;
+        }
+
         public IEnumerator<Claim> GetEnumerator()
         {
             return this.claims.GetEnumerator();
