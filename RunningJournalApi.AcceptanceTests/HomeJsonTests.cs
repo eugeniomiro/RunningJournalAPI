@@ -9,6 +9,7 @@ using Ploeh.Samples.RunningJournalApi;
 using System.Configuration;
 using Simple.Data;
 using System.Dynamic;
+using Xunit.Extensions;
 
 namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
 {
@@ -87,9 +88,10 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
             }
         }
 
-        [Fact]
+        [Theory]
         [UseDatabase]
-        public void GetRootReturnsCorrectEntryFromDatabase()
+        [InlineData("foo")]
+        public void GetRootReturnsCorrectEntryFromDatabase(string userName)
         {
             dynamic entry = new ExpandoObject();
             entry.time = DateTimeOffset.Now;
@@ -101,8 +103,8 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
             var connStr =
                 ConfigurationManager.ConnectionStrings["running-journal"].ConnectionString;
             var db = Database.OpenConnection(connStr);
-            db.User.Insert(UserName: "foo");
-            var userId = db.User.FindAllByUserName("foo").Single().UserId;
+            db.User.Insert(UserName: userName);
+            var userId = db.User.FindAllByUserName(userName).Single().UserId;
             entry.UserId = userId;
             db.JournalEntry.Insert(entry);
 
