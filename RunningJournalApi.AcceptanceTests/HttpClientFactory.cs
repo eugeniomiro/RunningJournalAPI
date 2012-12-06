@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Net.Http;
 using System.Web.Http.SelfHost;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 
 namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
 {
@@ -19,6 +21,10 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
             try
             {
                 client.BaseAddress = baseAddress;
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(
+                        "Bearer",
+                        new SimpleWebToken(new Claim("userName", "foo")).ToString());
                 return client;
             }
             catch
