@@ -91,6 +91,8 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
         [Theory]
         [UseDatabase]
         [InlineData("foo")]
+        [InlineData("bar")]
+        [InlineData("baz")]
         public void GetRootReturnsCorrectEntryFromDatabase(string userName)
         {
             dynamic entry = new ExpandoObject();

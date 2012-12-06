@@ -21,8 +21,12 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public HttpResponseMessage Get()
         {
+            SimpleWebToken swt;
+            SimpleWebToken.TryParse(this.Request.Headers.Authorization.Parameter, out swt);
+            var userName = swt.Single(c => c.Type == "userName").Value;
+
             var entries = this.db.JournalEntry
-                .FindAll(this.db.JournalEntry.User.UserName == "foo")
+                .FindAll(this.db.JournalEntry.User.UserName == userName)
                 .ToArray<JournalEntryModel>();
 
             return this.Request.CreateResponse(
@@ -35,7 +39,11 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public HttpResponseMessage Post(JournalEntryModel journalEntry)
         {
-            var userId = this.db.User.Insert(UserName: "foo").UserId;
+            SimpleWebToken swt;
+            SimpleWebToken.TryParse(this.Request.Headers.Authorization.Parameter, out swt);
+            var userName = swt.Single(c => c.Type == "userName").Value;
+
+            var userId = this.db.User.Insert(UserName: userName).UserId;
 
             this.db.JournalEntry.Insert(
                 UserId: userId,
