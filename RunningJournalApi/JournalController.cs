@@ -39,7 +39,12 @@ namespace Ploeh.Samples.RunningJournalApi
         {
             var userName = this.GetUserName();
 
-            var userId = this.db.User.Insert(UserName: userName).UserId;
+            var userId = this.db.User
+                .FindAllByUserName(userName)
+                .Select(this.db.User.UserId)
+                .ToScalarOrDefault<int>();
+            if (userId == 0)
+                userId = this.db.User.Insert(UserName: userName).UserId;
 
             this.db.JournalEntry.Insert(
                 UserId: userId,

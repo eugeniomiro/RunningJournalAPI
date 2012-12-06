@@ -118,5 +118,33 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
                 Assert.Contains(expected, actual.entries);
             }
         }
+
+        [Theory]
+        [UseDatabase]
+        [InlineData("ploeh")]
+        [InlineData("fnaah")]
+        [InlineData("ndøh")]
+        public void PostEntrySucceedsForExistingUser(string userName)
+        {
+            var connStr =
+                ConfigurationManager.ConnectionStrings["running-journal"].ConnectionString;
+            var db = Database.OpenConnection(connStr);
+            db.User.Insert(UserName: userName);
+
+            using (var client = HttpClientFactory.Create(userName))
+            {
+                var json = new
+                {
+                    time = DateTimeOffset.Now,
+                    distance = 8500,
+                    duration = TimeSpan.FromMinutes(44)
+                };
+                var response = client.PostAsJsonAsync("", json).Result;
+
+                Assert.True(
+                    response.IsSuccessStatusCode,
+                    "Actual status code: " + response.StatusCode);
+            }
+        }
     }
 }
