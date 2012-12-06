@@ -108,7 +108,7 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
             entry.UserId = userId;
             db.JournalEntry.Insert(entry);
 
-            using (var client = HttpClientFactory.Create())
+            using (var client = HttpClientFactory.Create(userName))
             {
                 var response = client.GetAsync("").Result;
 
