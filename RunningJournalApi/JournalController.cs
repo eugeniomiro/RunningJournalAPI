@@ -21,9 +21,7 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public HttpResponseMessage Get()
         {
-            SimpleWebToken swt;
-            SimpleWebToken.TryParse(this.Request.Headers.Authorization.Parameter, out swt);
-            var userName = swt.Single(c => c.Type == "userName").Value;
+            var userName = this.GetUserName();
 
             var entries = this.db.JournalEntry
                 .FindAll(this.db.JournalEntry.User.UserName == userName)
@@ -39,9 +37,7 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public HttpResponseMessage Post(JournalEntryModel journalEntry)
         {
-            SimpleWebToken swt;
-            SimpleWebToken.TryParse(this.Request.Headers.Authorization.Parameter, out swt);
-            var userName = swt.Single(c => c.Type == "userName").Value;
+            var userName = this.GetUserName();
 
             var userId = this.db.User.Insert(UserName: userName).UserId;
 
@@ -52,6 +48,14 @@ namespace Ploeh.Samples.RunningJournalApi
                 Duration: journalEntry.Duration);
 
             return this.Request.CreateResponse();
+        }
+
+        private string GetUserName()
+        {
+            SimpleWebToken swt;
+            SimpleWebToken.TryParse(this.Request.Headers.Authorization.Parameter, out swt);
+            var userName = swt.Single(c => c.Type == "userName").Value;
+            return userName;
         }
 
         private static dynamic CreateDb()
