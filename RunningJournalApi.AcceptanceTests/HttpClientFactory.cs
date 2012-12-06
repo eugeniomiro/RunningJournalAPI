@@ -13,6 +13,11 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
     {
         public static HttpClient Create()
         {
+            return Create("foo");
+        }
+
+        public static HttpClient Create(string userName)
+        {
             var baseAddress = new Uri("http://localhost:8765");
             var config = new HttpSelfHostConfiguration(baseAddress);
             new Bootstrap().Configure(config);
@@ -24,7 +29,7 @@ namespace Ploeh.Samples.RunningJournalApi.AcceptanceTests
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue(
                         "Bearer",
-                        new SimpleWebToken(new Claim("userName", "foo")).ToString());
+                        new SimpleWebToken(new Claim("userName", userName)).ToString());
                 return client;
             }
             catch
