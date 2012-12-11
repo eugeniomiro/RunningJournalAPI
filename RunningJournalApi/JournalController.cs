@@ -23,9 +23,7 @@ namespace Ploeh.Samples.RunningJournalApi
         {
             var userName = this.GetUserName();
 
-            var entries = this.db.JournalEntry
-                .FindAll(this.db.JournalEntry.User.UserName == userName)
-                .ToArray<JournalEntryModel>();
+            var entries = this.GetJournalEntries(userName);
 
             return this.Request.CreateResponse(
                 HttpStatusCode.OK,
@@ -33,6 +31,14 @@ namespace Ploeh.Samples.RunningJournalApi
                 {
                     Entries = entries
                 });
+        }
+
+        private dynamic GetJournalEntries(string userName)
+        {
+            var entries = this.db.JournalEntry
+                .FindAll(this.db.JournalEntry.User.UserName == userName)
+                .ToArray<JournalEntryModel>();
+            return entries;
         }
 
         public HttpResponseMessage Post(JournalEntryModel journalEntry)
