@@ -29,6 +29,8 @@ namespace Ploeh.Samples.RunningJournalApi
         public HttpResponseMessage Get()
         {
             var userName = this.userNameProjection.GetUserName(this.Request);
+            if (userName == null)
+                return this.Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "No user name was supplied");
 
             var entries = this.query.GetJournalEntries(userName);
 

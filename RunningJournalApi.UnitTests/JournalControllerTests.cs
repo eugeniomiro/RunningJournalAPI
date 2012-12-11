@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -66,6 +67,34 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             var actual = response.Content.ReadAsAsync<JournalModel>().Result;
             // Verify outcome
             Assert.True(expected.SequenceEqual(actual.Entries));
+            // Teardown
+        }
+
+        [Fact]
+        public void GetWithoutUserNameReturnsCorrectResponse()
+        {
+            // Fixture setup
+            var projectionStub = new Mock<IUserNameProjection>();
+            var queryDummy = new Mock<IJournalEntriesQuery>();
+            var cmdDummy = new Mock<IAddJournalEntryCommand>();
+            var sut = new JournalController(
+                projectionStub.Object,
+                queryDummy.Object,
+                cmdDummy.Object)
+            {
+                Request = new HttpRequestMessage()
+            };
+            sut.Request.Properties.Add(
+                HttpPropertyKeys.HttpConfigurationKey,
+                new HttpConfiguration());
+
+            projectionStub
+                .Setup(p => p.GetUserName(It.IsAny<HttpRequestMessage>()))
+                .Returns((string)null);
+            // Exercise system
+            var response = sut.Get();
+            // Verify outcome
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
             // Teardown
         }
 
