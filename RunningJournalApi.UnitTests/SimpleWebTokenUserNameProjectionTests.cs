@@ -80,5 +80,23 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             Assert.Null(actual);
             // Teardown
         }
+
+        [Fact]
+        public void GetUserNameFromInvalidSimpleWebTokenReturnsCorrectResult()
+        {
+            // Fixture setup
+            var sut = new SimpleWebTokenUserNameProjection();
+
+            var request = new HttpRequestMessage();
+            request.Headers.Authorization =
+                new AuthenticationHeaderValue(
+                    "Bearer",
+                    "invalid token value");
+            // Exercise system
+            var actual = sut.GetUserName(request);
+            // Verify outcome
+            Assert.Null(actual);
+            // Teardown
+        }
     }
 }

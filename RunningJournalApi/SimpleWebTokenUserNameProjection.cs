@@ -19,7 +19,9 @@ namespace Ploeh.Samples.RunningJournalApi
                 return null;
 
             SimpleWebToken swt;
-            SimpleWebToken.TryParse(request.Headers.Authorization.Parameter, out swt);
+            if (!SimpleWebToken.TryParse(request.Headers.Authorization.Parameter, out swt))
+                return null;
+
             var userName = swt.Single(c => c.Type == "userName").Value;
             return userName;
         }
