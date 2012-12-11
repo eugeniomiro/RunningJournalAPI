@@ -42,5 +42,20 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             Assert.Throws<ArgumentNullException>(() =>
                 sut.GetUserName(null));
         }
+
+        [Fact]
+        public void GetUserNameFromRquestWithoutAuthorizationHeaderReturnsCorrectResult()
+        {
+            // Fixture setup
+            var sut = new SimpleWebTokenUserNameProjection();
+
+            var request = new HttpRequestMessage();
+            Assert.Null(request.Headers.Authorization);
+            // Exercise system
+            var actual = sut.GetUserName(request);
+            // Verify outcome
+            Assert.Null(actual);
+            // Teardown
+        }
     }
 }
