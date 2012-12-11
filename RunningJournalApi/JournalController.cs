@@ -12,7 +12,7 @@ namespace Ploeh.Samples.RunningJournalApi
 {
     public class JournalController : ApiController
     {
-        private readonly UserNameProjection userNameProjection;
+        private readonly IUserNameProjection userNameProjection;
         private readonly IJournalEntriesQuery query;
         private readonly IAddJournalEntryCommand addCommand;
 
