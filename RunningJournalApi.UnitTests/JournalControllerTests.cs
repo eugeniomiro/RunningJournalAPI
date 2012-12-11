@@ -69,8 +69,11 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             // Teardown
         }
 
-        [Fact]
-        public void PostInsertsEntry()
+        [Theory]
+        [InlineData("foo")]
+        [InlineData("bar")]
+        [InlineData("baz")]
+        public void PostInsertsEntry(string userName)
         {
             // Fixture setup
             var projectionStub = new Mock<IUserNameProjection>();
@@ -87,12 +90,12 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
                 HttpPropertyKeys.HttpConfigurationKey,
                 new HttpConfiguration());
 
-            projectionStub.Setup(p => p.GetUserName(sut.Request)).Returns("foo");
+            projectionStub.Setup(p => p.GetUserName(sut.Request)).Returns(userName);
             // Exercise system
             var entry = new JournalEntryModel();
             sut.Post(entry);
             // Verify outcome
-            cmdMock.Verify(c => c.AddJournalEntry(entry, "foo"));
+            cmdMock.Verify(c => c.AddJournalEntry(entry, userName));
             // Teardown
         }
     }
