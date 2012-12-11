@@ -134,11 +134,11 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             // Fixture setup
             var projectionStub = new Mock<IUserNameProjection>();
             var queryDummy = new Mock<IJournalEntriesQuery>();
-            var cmdDummy = new Mock<IAddJournalEntryCommand>();
+            var cmdMock = new Mock<IAddJournalEntryCommand>();
             var sut = new JournalController(
                 projectionStub.Object,
                 queryDummy.Object,
-                cmdDummy.Object)
+                cmdMock.Object)
             {
                 Request = new HttpRequestMessage()
             };
@@ -154,6 +154,9 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             var response = sut.Post(dummyEntry);
             // Verify outcome
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            cmdMock.Verify(
+                c => c.AddJournalEntry(It.IsAny<JournalEntryModel>(), It.IsAny<string>()),
+                Times.Never());
             // Teardown
         }
     }
