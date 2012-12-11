@@ -58,8 +58,13 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             // Teardown
         }
 
-        [Fact]
-        public void GetUserNameFromRequestWithIncorrectAuthorizationSchemeReturnsCorrectResult()
+        [Theory]
+        [InlineData("Invalid")]
+        [InlineData("Not-Bearer")]
+        [InlineData("Bear")]
+        [InlineData("Bearer-it-is-not")]
+        public void GetUserNameFromRequestWithIncorrectAuthorizationSchemeReturnsCorrectResult(
+            string invalidSchema)
         {
             // Fixture setup
             var sut = new SimpleWebTokenUserNameProjection();
@@ -67,7 +72,7 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             var request = new HttpRequestMessage();
             request.Headers.Authorization =
                 new AuthenticationHeaderValue(
-                    "Invalid",
+                    invalidSchema,
                     new SimpleWebToken(new Claim("userName", "dummy")).ToString());
             // Exercise system
             var actual = sut.GetUserName(request);
