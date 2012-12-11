@@ -7,13 +7,18 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Extensions;
 
 namespace Ploeh.Samples.RunningJournalApi.UnitTests
 {
     public class SimpleWebTokenUserNameProjectionTests
     {
-        [Fact]
-        public void GetUserNameFromProperSimpleWebTokenReturnsCorrectResult()
+        [Theory]
+        [InlineData("foo")]
+        [InlineData("bar")]
+        [InlineData("baz")]
+        public void GetUserNameFromProperSimpleWebTokenReturnsCorrectResult(
+            string expected)
         {
             // Fixture setup
             var sut = new SimpleWebTokenUserNameProjection();
@@ -22,11 +27,11 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             request.Headers.Authorization = 
                 new AuthenticationHeaderValue(
                     "Bearer",
-                    new SimpleWebToken(new Claim("userName", "foo")).ToString());
+                    new SimpleWebToken(new Claim("userName", expected)).ToString());
             // Exercise system
             var actual = sut.GetUserName(request);
             // Verify outcome
-            Assert.Equal("foo", actual);
+            Assert.Equal(expected, actual);
             // Teardown
         }
     }
