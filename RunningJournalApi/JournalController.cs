@@ -55,6 +55,13 @@ namespace Ploeh.Samples.RunningJournalApi
         {
             var userName = this.GetUserName();
 
+            this.AddJournalEntry(journalEntry, userName);
+
+            return this.Request.CreateResponse();
+        }
+
+        private void AddJournalEntry(JournalEntryModel journalEntry, string userName)
+        {
             var userId = this.db.User
                 .FindAllByUserName(userName)
                 .Select(this.db.User.UserId)
@@ -67,8 +74,6 @@ namespace Ploeh.Samples.RunningJournalApi
                 Time: journalEntry.Time,
                 Distance: journalEntry.Distance,
                 Duration: journalEntry.Duration);
-
-            return this.Request.CreateResponse();
         }
 
         private string GetUserName()
