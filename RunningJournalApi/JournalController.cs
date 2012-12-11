@@ -15,7 +15,7 @@ namespace Ploeh.Samples.RunningJournalApi
         private readonly IJournalEntriesQuery query;
         private readonly IAddJournalEntryCommand addCommand;
 
-        public JournalController(JournalEntriesQuery query, AddJournalEntryCommand addCommand)
+        public JournalController(IJournalEntriesQuery query, IAddJournalEntryCommand addCommand)
         {
             this.query = query;
             this.addCommand = addCommand;
