@@ -22,8 +22,10 @@ namespace Ploeh.Samples.RunningJournalApi
             if (!SimpleWebToken.TryParse(request.Headers.Authorization.Parameter, out swt))
                 return null;
 
-            var userName = swt.Single(c => c.Type == "userName").Value;
-            return userName;
+            return swt
+                .Where(c => c.Type == "userName")
+                .Select(c => c.Value)
+                .SingleOrDefault();
         }
     }
 }
