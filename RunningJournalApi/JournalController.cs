@@ -55,25 +55,35 @@ namespace Ploeh.Samples.RunningJournalApi
         {
             var userName = this.GetUserName();
 
-            this.AddJournalEntry(journalEntry, userName);
+            new AddJournalEntryCommand(this.db).AddJournalEntry(journalEntry, userName);
 
             return this.Request.CreateResponse();
         }
 
-        private void AddJournalEntry(JournalEntryModel journalEntry, string userName)
+        private class AddJournalEntryCommand
         {
-            var userId = this.db.User
-                .FindAllByUserName(userName)
-                .Select(this.db.User.UserId)
-                .ToScalarOrDefault<int>();
-            if (userId == 0)
-                userId = this.db.User.Insert(UserName: userName).UserId;
+            private readonly dynamic db;
 
-            this.db.JournalEntry.Insert(
-                UserId: userId,
-                Time: journalEntry.Time,
-                Distance: journalEntry.Distance,
-                Duration: journalEntry.Duration);
+            public AddJournalEntryCommand(dynamic db)
+            {
+                this.db = db;
+            }
+
+            public void AddJournalEntry(JournalEntryModel journalEntry, string userName)
+            {
+                var userId = this.db.User
+                    .FindAllByUserName(userName)
+                    .Select(this.db.User.UserId)
+                    .ToScalarOrDefault<int>();
+                if (userId == 0)
+                    userId = this.db.User.Insert(UserName: userName).UserId;
+
+                this.db.JournalEntry.Insert(
+                    UserId: userId,
+                    Time: journalEntry.Time,
+                    Distance: journalEntry.Distance,
+                    Duration: journalEntry.Duration);
+            }
         }
 
         private string GetUserName()
