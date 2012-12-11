@@ -33,7 +33,12 @@ namespace Ploeh.Samples.RunningJournalApi
         {
             var connStr =
                 ConfigurationManager.ConnectionStrings["running-journal"].ConnectionString;
-            var builder = new SqlConnectionStringBuilder(connStr);
+            this.InstallDatabase(connStr);
+        }
+
+        public void InstallDatabase(string connectionString)
+        {
+            var builder = new SqlConnectionStringBuilder(connectionString);
             builder.InitialCatalog = "Master";
             using (var conn = new SqlConnection(builder.ConnectionString))
             {
@@ -44,7 +49,7 @@ namespace Ploeh.Samples.RunningJournalApi
                     cmd.Connection = conn;
 
                     var schemaSql = Resources.RunningDbSchema;
-                    foreach (var sql in 
+                    foreach (var sql in
                         schemaSql.Split(
                             new[] { "GO" },
                             StringSplitOptions.RemoveEmptyEntries))
@@ -60,7 +65,12 @@ namespace Ploeh.Samples.RunningJournalApi
         {
             var connStr =
                 ConfigurationManager.ConnectionStrings["running-journal"].ConnectionString;
-            var builder = new SqlConnectionStringBuilder(connStr);
+            this.UninstallDatabase(connStr);
+        }
+
+        public void UninstallDatabase(string connectionString)
+        {
+            var builder = new SqlConnectionStringBuilder(connectionString);
             builder.InitialCatalog = "Master";
             using (var conn = new SqlConnection(builder.ConnectionString))
             {
