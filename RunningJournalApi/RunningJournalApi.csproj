@@ -71,6 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddJournalEntryCommand.cs" />
     <Compile Include="Bootstrap.cs" />
     <Compile Include="IAddJournalEntryCommand.cs" />
     <Compile Include="IJournalEntriesQuery.cs" />
