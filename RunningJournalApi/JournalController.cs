@@ -14,11 +14,13 @@ namespace Ploeh.Samples.RunningJournalApi
     {
         private readonly dynamic db;
         private readonly JournalEntriesQuery query;
+        private readonly AddJournalEntryCommand addCommand;
 
         public JournalController()
         {
             this.db = CreateDb();
             this.query = new JournalEntriesQuery(this.db);
+            this.addCommand = new AddJournalEntryCommand(this.db);
         }
 
         public HttpResponseMessage Get()
@@ -57,7 +59,7 @@ namespace Ploeh.Samples.RunningJournalApi
         {
             var userName = this.GetUserName();
 
-            new AddJournalEntryCommand(this.db).AddJournalEntry(journalEntry, userName);
+            this.addCommand.AddJournalEntry(journalEntry, userName);
 
             return this.Request.CreateResponse();
         }
