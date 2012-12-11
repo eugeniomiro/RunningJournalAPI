@@ -45,16 +45,5 @@ namespace Ploeh.Samples.RunningJournalApi
 
             return this.Request.CreateResponse();
         }
-
-        private class SimpleWebTokenUserNameProjection : IUserNameProjection
-        {
-            public string GetUserName(HttpRequestMessage request)
-            {
-                SimpleWebToken swt;
-                SimpleWebToken.TryParse(request.Headers.Authorization.Parameter, out swt);
-                var userName = swt.Single(c => c.Type == "userName").Value;
-                return userName;
-            }
-        }
     }
 }

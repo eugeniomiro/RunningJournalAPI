@@ -89,6 +89,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SimpleWebToken.cs" />
+    <Compile Include="SimpleWebTokenUserNameProjection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
