@@ -15,6 +15,8 @@ namespace Ploeh.Samples.RunningJournalApi
                 throw new ArgumentNullException("request");
             if (request.Headers.Authorization == null)
                 return null;
+            if (request.Headers.Authorization.Scheme == "Invalid")
+                return null;
 
             SimpleWebToken swt;
             SimpleWebToken.TryParse(request.Headers.Authorization.Parameter, out swt);

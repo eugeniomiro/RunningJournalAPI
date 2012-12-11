@@ -57,5 +57,23 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             Assert.Null(actual);
             // Teardown
         }
+
+        [Fact]
+        public void GetUserNameFromRequestWithIncorrectAuthorizationSchemeReturnsCorrectResult()
+        {
+            // Fixture setup
+            var sut = new SimpleWebTokenUserNameProjection();
+
+            var request = new HttpRequestMessage();
+            request.Headers.Authorization =
+                new AuthenticationHeaderValue(
+                    "Invalid",
+                    new SimpleWebToken(new Claim("userName", "dummy")).ToString());
+            // Exercise system
+            var actual = sut.GetUserName(request);
+            // Verify outcome
+            Assert.Null(actual);
+            // Teardown
+        }
     }
 }
