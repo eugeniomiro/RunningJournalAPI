@@ -10,13 +10,17 @@ using System.Web.Http;
 using System.Web.Http.Hosting;
 using Moq;
 using Xunit;
+using Xunit.Extensions;
 
 namespace Ploeh.Samples.RunningJournalApi.UnitTests
 {
     public class JournalControllerTests
     {
-        [Fact]
-        public void GetReturnsCorrectResult()
+        [Theory]
+        [InlineData("foo")]
+        [InlineData("bar")]
+        [InlineData("baz")]
+        public void GetReturnsCorrectResult(string userName)
         {
             // Fixture setup
             var projectionStub = new Mock<IUserNameProjection>();
@@ -33,7 +37,7 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
                 HttpPropertyKeys.HttpConfigurationKey,
                 new HttpConfiguration());
 
-            projectionStub.Setup(p => p.GetUserName(sut.Request)).Returns("foo");
+            projectionStub.Setup(p => p.GetUserName(sut.Request)).Returns(userName);
 
             var expected = new[]
                  {
@@ -56,7 +60,7 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
                          Duration = TimeSpan.FromMinutes(31)
                      }
                  };
-            queryStub.Setup(q => q.GetJournalEntries("foo")).Returns(expected);
+            queryStub.Setup(q => q.GetJournalEntries(userName)).Returns(expected);
             // Exercise system
             var response = sut.Get();
             var actual = response.Content.ReadAsAsync<JournalModel>().Result;
