@@ -18,7 +18,7 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public JournalController(IJournalEntriesQuery query, IAddJournalEntryCommand addCommand)
         {
-            this.userNameProjection = new UserNameProjection();
+            this.userNameProjection = new SimpleWebTokenUserNameProjection();
             this.query = query;
             this.addCommand = addCommand;
         }
@@ -46,7 +46,7 @@ namespace Ploeh.Samples.RunningJournalApi
             return this.Request.CreateResponse();
         }
 
-        private class UserNameProjection : IUserNameProjection
+        private class SimpleWebTokenUserNameProjection : IUserNameProjection
         {
             public string GetUserName(HttpRequestMessage request)
             {
