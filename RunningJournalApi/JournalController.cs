@@ -45,10 +45,11 @@ namespace Ploeh.Samples.RunningJournalApi
         public HttpResponseMessage Post(JournalEntryModel journalEntry)
         {
             var userName = this.userNameProjection.GetUserName(this.Request);
-            if (userName == null)
-                return this.Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "No user name was supplied");
 
             this.addCommand.AddJournalEntry(journalEntry, userName);
+
+            if (userName == null)
+                return this.Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "No user name was supplied");
 
             return this.Request.CreateResponse();
         }
