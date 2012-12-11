@@ -29,11 +29,11 @@ namespace Ploeh.Samples.RunningJournalApi
                 HttpStatusCode.OK,
                 new JournalModel
                 {
-                    Entries = entries
+                    Entries = entries.ToArray()
                 });
         }
 
-        private dynamic GetJournalEntries(string userName)
+        private IEnumerable<JournalEntryModel> GetJournalEntries(string userName)
         {
             var entries = this.db.JournalEntry
                 .FindAll(this.db.JournalEntry.User.UserName == userName)
