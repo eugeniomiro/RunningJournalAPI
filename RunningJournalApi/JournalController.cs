@@ -23,7 +23,7 @@ namespace Ploeh.Samples.RunningJournalApi
         {
             var userName = this.GetUserName();
 
-            var entries = this.GetJournalEntries(userName);
+            var entries = new JournalEntriesQuery(this.db).GetJournalEntries(userName);
 
             return this.Request.CreateResponse(
                 HttpStatusCode.OK,
@@ -33,12 +33,22 @@ namespace Ploeh.Samples.RunningJournalApi
                 });
         }
 
-        private IEnumerable<JournalEntryModel> GetJournalEntries(string userName)
+        private class JournalEntriesQuery
         {
-            var entries = this.db.JournalEntry
-                .FindAll(this.db.JournalEntry.User.UserName == userName)
-                .ToArray<JournalEntryModel>();
-            return entries;
+            private readonly dynamic db;
+
+            public JournalEntriesQuery(dynamic db)
+            {
+                this.db = db;
+            }
+
+            public IEnumerable<JournalEntryModel> GetJournalEntries(string userName)
+            {
+                var entries = this.db.JournalEntry
+                    .FindAll(this.db.JournalEntry.User.UserName == userName)
+                    .ToArray<JournalEntryModel>();
+                return entries;
+            }
         }
 
         public HttpResponseMessage Post(JournalEntryModel journalEntry)
