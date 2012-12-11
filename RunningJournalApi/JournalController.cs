@@ -13,17 +13,19 @@ namespace Ploeh.Samples.RunningJournalApi
     public class JournalController : ApiController
     {
         private readonly dynamic db;
+        private readonly JournalEntriesQuery query;
 
         public JournalController()
         {
             this.db = CreateDb();
+            this.query = new JournalEntriesQuery(this.db);
         }
 
         public HttpResponseMessage Get()
         {
             var userName = this.GetUserName();
 
-            var entries = new JournalEntriesQuery(this.db).GetJournalEntries(userName);
+            var entries = this.query.GetJournalEntries(userName);
 
             return this.Request.CreateResponse(
                 HttpStatusCode.OK,
