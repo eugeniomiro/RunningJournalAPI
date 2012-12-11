@@ -21,7 +21,10 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             // Fixture setup
             var queryStub = new Mock<IJournalEntriesQuery>();
             var cmdDummy = new Mock<IAddJournalEntryCommand>();
-            var sut = new JournalController(queryStub.Object, cmdDummy.Object)
+            var sut = new JournalController(
+                new SimpleWebTokenUserNameProjection(),
+                queryStub.Object,
+                cmdDummy.Object)
             {
                 Request = new HttpRequestMessage()
             };
@@ -69,7 +72,10 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             // Fixture setup
             var queryDummy = new Mock<IJournalEntriesQuery>();
             var cmdMock = new Mock<IAddJournalEntryCommand>();
-            var sut = new JournalController(queryDummy.Object, cmdMock.Object)
+            var sut = new JournalController(
+                new SimpleWebTokenUserNameProjection(),
+                queryDummy.Object,
+                cmdMock.Object)
             {
                 Request = new HttpRequestMessage()
             };

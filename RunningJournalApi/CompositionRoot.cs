@@ -20,6 +20,7 @@ namespace Ploeh.Samples.RunningJournalApi
         {
             var db = CreateDb();
             return new JournalController(
+                new SimpleWebTokenUserNameProjection(),
                 new JournalEntriesQuery(db),
                 new AddJournalEntryCommand(db));
         }
