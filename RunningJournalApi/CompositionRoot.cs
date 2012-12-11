@@ -18,7 +18,10 @@ namespace Ploeh.Samples.RunningJournalApi
             HttpControllerDescriptor controllerDescriptor,
             Type controllerType)
         {
-            return new JournalController(new JournalEntriesQuery(CreateDb()));
+            var db = CreateDb();
+            return new JournalController(
+                new JournalEntriesQuery(db),
+                new AddJournalEntryCommand(db));
         }
 
         private static dynamic CreateDb()
