@@ -73,10 +73,11 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
         public void PostInsertsEntry()
         {
             // Fixture setup
+            var projectionStub = new Mock<IUserNameProjection>();
             var queryDummy = new Mock<IJournalEntriesQuery>();
             var cmdMock = new Mock<IAddJournalEntryCommand>();
             var sut = new JournalController(
-                new SimpleWebTokenUserNameProjection(),
+                projectionStub.Object,
                 queryDummy.Object,
                 cmdMock.Object)
             {
@@ -85,10 +86,8 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             sut.Request.Properties.Add(
                 HttpPropertyKeys.HttpConfigurationKey,
                 new HttpConfiguration());
-            sut.Request.Headers.Authorization =
-                new AuthenticationHeaderValue(
-                    "Bearer",
-                    new SimpleWebToken(new Claim("userName", "foo")).ToString());
+
+            projectionStub.Setup(p => p.GetUserName(sut.Request)).Returns("foo");
             // Exercise system
             var entry = new JournalEntryModel();
             sut.Post(entry);
