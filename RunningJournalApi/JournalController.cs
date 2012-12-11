@@ -46,7 +46,7 @@ namespace Ploeh.Samples.RunningJournalApi
             return this.Request.CreateResponse();
         }
 
-        private class UserNameProjection
+        private class UserNameProjection : IUserNameProjection
         {
             public string GetUserName(HttpRequestMessage request)
             {
