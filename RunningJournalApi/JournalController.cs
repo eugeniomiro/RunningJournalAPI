@@ -36,7 +36,7 @@ namespace Ploeh.Samples.RunningJournalApi
                 });
         }
 
-        private class JournalEntriesQuery
+        private class JournalEntriesQuery : IJournalEntriesQuery
         {
             private readonly dynamic db;
 
