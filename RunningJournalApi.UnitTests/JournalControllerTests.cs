@@ -28,7 +28,7 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             sut.Request.Properties.Add(
                 HttpPropertyKeys.HttpConfigurationKey,
                 new HttpConfiguration());
-            sut.Request.Headers.Authorization = 
+            sut.Request.Headers.Authorization =
                 new AuthenticationHeaderValue(
                     "Bearer",
                     new SimpleWebToken(new Claim("userName", "foo")).ToString());
@@ -60,6 +60,31 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             var actual = response.Content.ReadAsAsync<JournalModel>().Result;
             // Verify outcome
             Assert.True(expected.SequenceEqual(actual.Entries));
+            // Teardown
+        }
+
+        [Fact]
+        public void PostInsertsEntry()
+        {
+            // Fixture setup
+            var queryDummy = new Mock<IJournalEntriesQuery>();
+            var cmdMock = new Mock<IAddJournalEntryCommand>();
+            var sut = new JournalController(queryDummy.Object, cmdMock.Object)
+            {
+                Request = new HttpRequestMessage()
+            };
+            sut.Request.Properties.Add(
+                HttpPropertyKeys.HttpConfigurationKey,
+                new HttpConfiguration());
+            sut.Request.Headers.Authorization =
+                new AuthenticationHeaderValue(
+                    "Bearer",
+                    new SimpleWebToken(new Claim("userName", "foo")).ToString());
+            // Exercise system
+            var entry = new JournalEntryModel();
+            sut.Post(entry);
+            // Verify outcome
+            cmdMock.Verify(c => c.AddJournalEntry(entry, "foo"));
             // Teardown
         }
     }
