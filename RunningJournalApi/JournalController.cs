@@ -17,7 +17,6 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public JournalController(JournalEntriesQuery query, AddJournalEntryCommand addCommand)
         {
-            var db = CreateDb();
             this.query = query;
             this.addCommand = addCommand;
         }
@@ -51,13 +50,6 @@ namespace Ploeh.Samples.RunningJournalApi
             SimpleWebToken.TryParse(this.Request.Headers.Authorization.Parameter, out swt);
             var userName = swt.Single(c => c.Type == "userName").Value;
             return userName;
-        }
-
-        private static dynamic CreateDb()
-        {
-            var connStr =
-                ConfigurationManager.ConnectionStrings["running-journal"].ConnectionString;
-            return Database.OpenConnection(connStr);
         }
     }
 }
