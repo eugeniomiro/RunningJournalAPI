@@ -15,10 +15,10 @@ namespace Ploeh.Samples.RunningJournalApi
         private readonly IJournalEntriesQuery query;
         private readonly IAddJournalEntryCommand addCommand;
 
-        public JournalController()
+        public JournalController(JournalEntriesQuery query)
         {
             var db = CreateDb();
-            this.query = new JournalEntriesQuery(db);
+            this.query = query;
             this.addCommand = new AddJournalEntryCommand(db);
         }
 

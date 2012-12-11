@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Web.Http;
+using System.Web.Http.Dispatcher;
 using Newtonsoft.Json.Serialization;
 using Ploeh.Samples.RunningJournalApi.Properties;
 
@@ -27,6 +28,10 @@ namespace Ploeh.Samples.RunningJournalApi
 
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver =
                 new CamelCasePropertyNamesContractResolver();
+
+            config.Services.Replace(
+                typeof(IHttpControllerActivator),
+                new CompositionRoot());
         }
 
         public void InstallDatabase()

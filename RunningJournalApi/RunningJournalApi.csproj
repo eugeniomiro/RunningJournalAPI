@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="AddJournalEntryCommand.cs" />
     <Compile Include="Bootstrap.cs" />
+    <Compile Include="CompositionRoot.cs" />
     <Compile Include="IAddJournalEntryCommand.cs" />
     <Compile Include="IJournalEntriesQuery.cs" />
     <Compile Include="JournalController.cs" />
