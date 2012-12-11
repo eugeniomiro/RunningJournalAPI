@@ -34,5 +34,13 @@ namespace Ploeh.Samples.RunningJournalApi.UnitTests
             Assert.Equal(expected, actual);
             // Teardown
         }
+
+        [Fact]
+        public void GetUserNameFromNullRequestThrows()
+        {
+            var sut = new SimpleWebTokenUserNameProjection();
+            Assert.Throws<ArgumentNullException>(() =>
+                sut.GetUserName(null));
+        }
     }
 }
