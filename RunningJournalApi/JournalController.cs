@@ -12,18 +12,20 @@ namespace Ploeh.Samples.RunningJournalApi
 {
     public class JournalController : ApiController
     {
+        private readonly UserNameProjection userNameProjection;
         private readonly IJournalEntriesQuery query;
         private readonly IAddJournalEntryCommand addCommand;
 
         public JournalController(IJournalEntriesQuery query, IAddJournalEntryCommand addCommand)
         {
+            this.userNameProjection = new UserNameProjection();
             this.query = query;
             this.addCommand = addCommand;
         }
 
         public HttpResponseMessage Get()
         {
-            var userName = new UserNameProjection().GetUserName(this.Request);
+            var userName = this.userNameProjection.GetUserName(this.Request);
 
             var entries = this.query.GetJournalEntries(userName);
 
@@ -37,7 +39,7 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public HttpResponseMessage Post(JournalEntryModel journalEntry)
         {
-            var userName = new UserNameProjection().GetUserName(this.Request);
+            var userName = this.userNameProjection.GetUserName(this.Request);
 
             this.addCommand.AddJournalEntry(journalEntry, userName);
 
