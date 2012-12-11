@@ -23,7 +23,7 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public HttpResponseMessage Get()
         {
-            var userName = this.GetUserName();
+            var userName = this.GetUserName(this.Request);
 
             var entries = this.query.GetJournalEntries(userName);
 
@@ -37,17 +37,17 @@ namespace Ploeh.Samples.RunningJournalApi
 
         public HttpResponseMessage Post(JournalEntryModel journalEntry)
         {
-            var userName = this.GetUserName();
+            var userName = this.GetUserName(this.Request);
 
             this.addCommand.AddJournalEntry(journalEntry, userName);
 
             return this.Request.CreateResponse();
         }
 
-        private string GetUserName()
+        private string GetUserName(HttpRequestMessage request)
         {
             SimpleWebToken swt;
-            SimpleWebToken.TryParse(this.Request.Headers.Authorization.Parameter, out swt);
+            SimpleWebToken.TryParse(request.Headers.Authorization.Parameter, out swt);
             var userName = swt.Single(c => c.Type == "userName").Value;
             return userName;
         }
