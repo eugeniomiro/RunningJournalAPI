@@ -63,7 +63,7 @@ namespace Ploeh.Samples.RunningJournalApi
             return this.Request.CreateResponse();
         }
 
-        private class AddJournalEntryCommand
+        private class AddJournalEntryCommand : IAddJournalEntryCommand
         {
             private readonly dynamic db;
 
